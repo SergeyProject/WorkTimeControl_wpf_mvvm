@@ -1,0 +1,89 @@
+﻿<Window x:Class="WorkTimeControl.WpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:WorkTimeControl.WpfClient.ViewModels"          
+        xmlns:local="clr-namespace:WorkTimeControl.WpfClient"
+        mc:Ignorable="d"
+        Title="WorkTimeControl" Height="550" Width="800" MinHeight="550" MinWidth="900" WindowState="Maximized" Background="AliceBlue" >
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="listBox1" ItemsSource="{Binding UsersD}"  SelectedItem="{Binding userDTO}" SelectedIndex="{Binding ListUserIndex}" Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="7" Background="AliceBlue">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Margin="10" Text="{Binding Path=Name}" FontSize="32"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChangeCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ListBox>
+        <Button x:Name="btnAdd" Content="Новый" Command="{Binding AddWindowOpenCommand}" FontSize="22" Grid.Column="6" Grid.Row="2" Margin="5,20,5,20"/>
+        <Button x:Name="btnUpdate" Content="Изменить" Command="{Binding WindowUserUpdateCommand}" FontSize="22" Grid.Column="6" Grid.Row="3" Margin="5,20,5,20"/>
+        <Button x:Name="btnDel" Content="Удалить" Command="{Binding DeleteUserCommand}" FontSize="22" Grid.Column="6" Grid.Row="8" Margin="5,20,5,20"/>
+        <Label x:Name="lblFio" BorderThickness="2" BorderBrush="Gray" DataContext="{Binding userDTO}" Content="{Binding Name}"  FontSize="72" Grid.Column="2" Grid.ColumnSpan="6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" Margin="5"/>
+        <Label x:Name="lblTime" Content="{Binding CurrentTime}" BorderThickness="2" BorderBrush="Gray" Margin="0,5,0,5" FontSize="58" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" Grid.Column="1" />
+        <Button Content="Camera Reconnect" FontSize="14" Command="{Binding CameraInitialCommand}" Grid.Column="8" Grid.Row="1" Margin="20" Background="AliceBlue" />
+        <Rectangle Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="5,5,5,5" Stroke="#FF050A29"/>
+        <Image Source="{Binding GetBitmapImage}"  Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="10,10,10,10"/>
+        <Rectangle Grid.Column="3" Grid.Row="5" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="5" Stroke="#FF061440"/>
+        <Image Source="{Binding GetTimeImage}"  Grid.Column="3" Grid.Row="5" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="10,10,10,10" />
+
+        <Button x:Name="btnWorkOn"  Content="Прибыл" Command="{Binding AddUserTimeWorkOnCommand}" IsEnabled="{Binding ButtonOnWorkEnabled}"  FontSize="22" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Margin="5,20,5,20"/>
+        <Button x:Name="btnWorkOff" Content="Убыл" FontSize="22" Command="{Binding AddUserTimeWorkOffCommand}" IsEnabled="{Binding ButtonOnWorkDisabled}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="8" Margin="5,20,5,20"/>
+        <ListView x:Name="listbox2" TextElement.FontSize="22" ItemsSource="{Binding ContentUserTimesList}" SelectedIndex="{Binding ListUserTimeIndex}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Grid.RowSpan="5" Background="AliceBlue">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="230"  DisplayMemberBinding="{Binding Path=OnWork}">Статус</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Time}" Width="100">Время</GridViewColumn>
+                    <GridViewColumn Header="Фото" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Path=Photo}" Stretch="Uniform" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionUserTimeCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ListView>
+
+    </Grid>
+</Window>
